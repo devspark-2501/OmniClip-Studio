@@ -35,7 +35,13 @@ export default function DashboardPage() {
     const res = await fetch("/api/clips", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, startTime: start, endTime: end, caption: "Check out this clip! #viral #omniclip", scheduledDate: new Date() }),
+      body: JSON.stringify({ 
+        title, 
+        startTime: start, 
+        endTime: end, 
+        caption: "Check out this clip! #viral #omniclip", 
+        scheduledDate: new Date() 
+      }),
     });
     const data = await res.json();
     if (data.success) fetchClips();
@@ -43,31 +49,65 @@ export default function DashboardPage() {
 
   const exportSegment = (startTime, endTime) => {
     const video = videoRef.current;
+    if (!video) return;
+
     video.currentTime = startTime;
+
     const stream = video.captureStream ? video.captureStream() : video.mozCaptureStream();
-    const mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+    if (!stream) {
+      alert("Your browser does not support video stream capturing. Please use Google Chrome.");
+      return;
+    }
+
+    let options = { mimeType: "video/webm" };
+    if (MediaRecorder.isTypeSupported("video/webm;codecs=vp9")) {
+      options = { mimeType: "video/webm;codecs=vp9" };
+    } else if (MediaRecorder.isTypeSupported("video/mp4")) {
+      options = { mimeType: "video/mp4" };
+    }
+
+    let mediaRecorder;
+    try {
+      mediaRecorder = new MediaRecorder(stream, options);
+    } catch (e) {
+      console.error("MediaRecorder error:", e);
+      alert("Could not initialize MediaRecorder with this video format.");
+      return;
+    }
+
     const chunks = [];
 
-    mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+    mediaRecorder.ondataavailable = (e) => {
+      if (e.data && e.data.size > 0) {
+        chunks.push(e.data);
+      }
+    };
+
     mediaRecorder.onstop = () => {
-      const blob = new Blob(chunks, { type: "video/webm" });
+      const blob = new Blob(chunks, { type: options.mimeType });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `clip-${Math.floor(startTime)}-${Math.floor(endTime)}.webm`;
+      a.download = `omniclip-${Math.floor(startTime)}-${Math.floor(endTime)}.webm`;
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     };
 
     mediaRecorder.start();
-    video.play();
+    video.play().catch((err) => console.log("Autoplay blocked or failed:", err));
 
     const checkTime = () => {
       if (video.currentTime >= endTime) {
         video.pause();
-        mediaRecorder.stop();
+        if (mediaRecorder.state !== "inactive") {
+          mediaRecorder.stop();
+        }
         video.removeEventListener("timeupdate", checkTime);
       }
     };
+
     video.addEventListener("timeupdate", checkTime);
   };
 
@@ -77,7 +117,12 @@ export default function DashboardPage() {
       
       <div className="bg-gray-900 p-6 rounded-xl border border-gray-800 space-y-4">
         <h2 className="text-xl font-semibold">1. Upload & Split Video</h2>
-        <input type="file" accept="video/*" onChange={handleFileUpload} className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" />
+        <input 
+          type="file" 
+          accept="video/*" 
+          onChange={handleFileUpload} 
+          className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" 
+        />
         
         {videoSrc && (
           <div className="space-y-4">
