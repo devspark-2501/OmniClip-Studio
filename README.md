@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# OmniClip Studio
 
-## Getting Started
+OmniClip Studio is a powerful, full-stack Next.js content repurposing platform designed to help creators and marketing teams ingest long-form videos, split them into engaging clips, generate tailored platform copy, and organize their publishing schedule[cite: 1].
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+* **Long Video Ingestion:** Seamlessly upload and preview long-form videos or podcasts directly in the browser[cite: 1].
+* **Interactive Video Splitting:** Use real-time timestamp markers to split videos into discrete, high-impact clips.
+* **Client-Side Export Engine:** Instantly cut and download video segments natively using browser media stream APIs without needing heavy paid backend software or cloud video processing.
+* **Content Calendar & MongoDB Integration:** Save generated clips, custom captions, and scheduled dates directly to a MongoDB database[cite: 1].
+* **Brand-Voice Memory & Feedback Loop:** Designed to track creator preferences and scheduling data to streamline future content workflows[cite: 1].
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+* **Frontend:** Next.js (App Router, React Hooks, Tailwind CSS)
+* **Backend:** Next.js Server Actions & API Routes
+* **Database & ORM:** MongoDB & Mongoose
+* **Authentication:** NextAuth.js & bcryptjs
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ⚙️ Getting Started Locally
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/devspark-2501/OmniClip-Studio.git](https://github.com/devspark-2501/OmniClip-Studio.git)
+   cd omniclip
